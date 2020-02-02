@@ -14,7 +14,7 @@ setuptools.setup(
     url="",
     packages=setuptools.find_packages(),
     install_requires=[
-
+        "PyYAML==5.3"
     ],
     entry_points = {
         'console_scripts': ['lab=simplelab.lab:main'],

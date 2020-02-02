@@ -1,0 +1,12 @@
+- name: "myserver"
+  login_method: ssh_password
+  ip: 0.0.0.0
+  username: theusername
+  password: thepassword
+  default: True
+- name: "myotherserver"
+  login_method: ssh_password
+  ip: 0.0.0.0
+  username: theusername
+  password: thepassword
+  default: False
