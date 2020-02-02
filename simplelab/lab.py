@@ -23,10 +23,8 @@ def getserver(name):
             return server, True
     return default, False
         
-
-
-def parsearguments():
-    help_str = """lab [server] action
+def print_help():
+    print("""lab [server] action
 if [server] is omitted the default one is used
 action can be:
 
@@ -35,12 +33,21 @@ action can be:
 * install: Install simplelab to server [server]
 * shared list: List all the experiment shared assets
 * shared clear <name>: Clear the content of shared assets <name>
-"""
-    server, shift = getserver(sys.argv[1])
-    args = sys.argv[1:]
-    if shift: args = args[1:]
-    Args = collections.namedtuple('Args', ['server', 'cmd', 'args'])
+""")
+    sys.exit(1)
 
+
+def parsearguments():
+    try:
+        server, shift = getserver(sys.argv[1])
+        args = sys.argv[1:]
+        if shift: args = args[1:]
+        Args = collections.namedtuple('Args', ['server', 'cmd', 'args'])
+    except:
+        print_help()
+    if args[0] not in ["run", "status", "install", "shared"]:
+        print_help()
+    
     return Args(server, args[0], args[1:])
 
 
