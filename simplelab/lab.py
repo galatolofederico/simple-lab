@@ -54,4 +54,11 @@ def parsearguments():
 def main():
     loadservers()
     args = parsearguments()
-    print(args)
+    if args.cmd == "run":
+        run(args.server, args.args)
+    elif args.cmd == "status":
+        status()
+    elif args.cmd == "install":
+        install(args.server)
+    elif args.cmd == "shared":
+        shared(args.server, args.args)
