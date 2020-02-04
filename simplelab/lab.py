@@ -1,11 +1,8 @@
-from simplelab.api.utils import loadservers, getserver, parsearguments
-from simplelab.api.server import Server
+from simplelab.api.utils import loadservers, getserver, parsearguments, initservers
 from simplelab.cmd.status import status
 
-servers = None
-
 def main():
-    servers = [Server(**server) for server in loadservers()]
+    servers = initservers(loadservers())
     args = parsearguments(servers)
     if args.cmd == "run":
         run(args.server, args.args)

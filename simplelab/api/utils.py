@@ -3,6 +3,9 @@ import sys
 import os
 import collections
 
+from simplelab.api.server.sshserver import SSHServer
+from simplelab.api.server.localserver import LocalServer
+
 def loadservers():
     try:
         with open(os.path.expanduser("~/.config/lab.servers.yml")) as f:
@@ -47,3 +50,12 @@ def parsearguments(servers):
     
     return Args(server, args[0], args[1:])
 
+
+
+def initservers(servers):
+    ret = [LocalServer()]
+    for server in servers:
+        if server["login_method"] == "ssh_password":
+            ret.append(SSHServer(**server))
+    
+    return ret
