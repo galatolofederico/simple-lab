@@ -1,9 +1,20 @@
 from simplelab.api.utils import execcmd
 from simplelab.api.server.localserver import LocalServer
 from simplelab.api.repository import Repository
+import yaml
+import os
+
+def loadyaml(fname):
+    if os.path.isfile(fname):
+        f = open(fname)
+        return yaml.load(f, Loader=yaml.FullLoader)
+    else:
+        return None
 
 
 def run(server, args):
+    labyml = loadyaml("./lab.yml")
+    secrets = loadyaml("./secrets.yml")
     server.connect()
     if not server.connected: raise Exception("Not connected")
     if not server.getinstalled(): raise Exception("Not installed")
@@ -27,6 +38,6 @@ def run(server, args):
 
 
     if not remoterepo.exists():
-        remoterepo.clone()
-        remoterepo.build()
+        remoterepo.clone(secrets)
+        remoterepo.build(labyml)
     
