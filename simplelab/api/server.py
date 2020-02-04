@@ -13,9 +13,29 @@ class Server:
     def connect(self):
         if self.connected: return
         if self.args["login_method"] == "ssh_password":
-            self.client.connect(self.args["ip"], 
-                           username=self.args["username"],
-                           password=self.args["password"],
-                           timeout=2, banner_timeout=2,
-                           auth_timeout=2)
-            self.connected = True
+            try:
+                self.client.connect(self.args["ip"], 
+                            username=self.args["username"],
+                            password=self.args["password"],
+                            timeout=2, banner_timeout=2,
+                            auth_timeout=2)
+                self.connected = True
+            except:
+                pass
+    
+    def getinstalled(self):
+        return False
+
+    def getrunning(self):
+        if not self.connected: return None
+        return 0
+    
+    def getqueued(self):
+        if not self.connected: return None
+        return 0
+
+    def getstatus(self):
+        status = "Offline"
+        if self.connected: status = "Online (lab not installed)"
+        if self.getinstalled(): status = "Ready"
+        return status

@@ -15,7 +15,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "PyYAML==5.3",
-        "paramiko==2.7.1"
+        "paramiko==2.7.1",
+        "prettytable==0.7.2"
     ],
     entry_points = {
         'console_scripts': ['lab=simplelab.lab:main'],
