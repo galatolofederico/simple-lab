@@ -7,13 +7,12 @@ from simplelab.api.server.sshserver import SSHServer
 from simplelab.api.server.localserver import LocalServer
 
 def loadservers():
-    try:
-        with open(os.path.expanduser("~/.config/lab.servers.yml")) as f:
-            return yaml.load(f, Loader=yaml.FullLoader)
-    except:
-        print("File ~/.config/lab.servers.yml not found!")
-        sys.exit(1)
-
+    fname = os.path.expanduser("~/.config/lab.servers.yml")
+    if os.path.isfile(fname):
+        f = open(fname)
+        return yaml.load(f, Loader=yaml.FullLoader)
+    else:
+        return []
 
 def getserver(name, servers):
     default = servers[0]
@@ -60,3 +59,15 @@ def initservers(servers):
             ret.append(SSHServer(**server))
     
     return ret
+
+
+
+def checkcmd(server, prog):
+    print("[%s] checking for: %s" % (server.name, prog))
+    _, stderr = server.cmd(prog)
+    if len(stderr) > 0:
+        raise Exception("You need to install %s on %s" % (prog, server.name))
+
+def execcmd(server, cmd):
+    print("[%s] executing: %s" % (server.name, cmd))
+    _, stderr = server.cmd(cmd)
