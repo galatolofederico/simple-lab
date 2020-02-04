@@ -7,7 +7,10 @@ class Server:
         self.default = kwargs["default"] if "default" in kwargs else False
         
     def getinstalled(self):
-        return False
+        if not self.connected: return False
+        stdout, stderr = self.cmd("ls ~/simple_lab")
+        if len(stderr) > 0: return False
+        return True
 
     def getrunning(self):
         if not self.connected: return None

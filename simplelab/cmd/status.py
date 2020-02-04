@@ -6,5 +6,5 @@ def status(servers):
     for server in servers:
         server.connect()
         table.add_row([server.name, server.getstatus(), server.getrunning(), server.getqueued()])
-    
+        
     print(table)

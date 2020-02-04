@@ -21,3 +21,8 @@ class SSHServer(Server):
                 self.connected = True
             except:
                 pass
+    
+    def cmd(self, cmd):
+        if not self.connected: raise Exception("Not connected")
+        stdin, stdout, stderr = self.client.exec_command(cmd)
+        return stdout.read().decode("utf-8"), stderr.read().decode("utf-8")
