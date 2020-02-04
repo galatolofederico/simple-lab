@@ -8,7 +8,7 @@ class Server:
         
     def getinstalled(self):
         if not self.connected: return False
-        stdout, stderr = self.cmd("ls ~/simple_lab")
+        stdout, stderr = self.cmd("ls ~/simplelab")
         if len(stderr) > 0: return False
         return True
 

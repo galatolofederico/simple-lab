@@ -31,7 +31,8 @@ action can be:
 
 * run <cmd>: Start experiment on [server] with command <cmd>
 * status: Check the status of all the servers
-* install: Install simplelab to server [server]
+* install: Install simplelab to [server]
+* update: Update simplelab on [server]
 * shared list: List all the experiment shared assets
 * shared clear <name>: Clear the content of shared assets <name>
 """)
@@ -45,7 +46,7 @@ def parsearguments(servers):
     args = sys.argv[1:]
     if shift: args = args[1:]
     Args = collections.namedtuple('Args', ['server', 'cmd', 'args'])
-    if args[0] not in ["run", "status", "install", "shared"]:
+    if args[0] not in ["run", "status", "install", "shared", "update"]:
         print_help()
     
     return Args(server, args[0], args[1:])

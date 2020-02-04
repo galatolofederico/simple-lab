@@ -1,5 +1,9 @@
-from simplelab.api.utils import loadservers, getserver, parsearguments, initservers
+from simplelab.api.utils import loadservers, parsearguments, initservers
+
 from simplelab.cmd.status import status
+from simplelab.cmd.install import install
+from simplelab.cmd.update import update
+
 
 def main():
     servers = initservers(loadservers())
@@ -10,5 +14,7 @@ def main():
         status(servers)
     elif args.cmd == "install":
         install(args.server)
+    elif args.cmd == "update":
+        update(args.server)
     elif args.cmd == "shared":
         shared(args.server, args.args)
