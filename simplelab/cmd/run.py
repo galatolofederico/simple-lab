@@ -39,5 +39,8 @@ def run(server, args):
 
     if not remoterepo.exists():
         remoterepo.clone(secrets)
-        remoterepo.build(labyml)
+    
+    #TODO: check and update
+    
+    remoterepo.build(labyml)
     
