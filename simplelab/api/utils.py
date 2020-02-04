@@ -30,7 +30,7 @@ action can be:
 
 * run <cmd>: Start experiment on [server] with command <cmd>
 * status: Check the status of all the servers
-* install: Install simplelab to [server]
+* install: Install simplelab on [server]
 * update: Update simplelab on [server]
 * shared list: List all the experiment shared assets
 * shared clear <name>: Clear the content of shared assets <name>
