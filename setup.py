@@ -14,7 +14,8 @@ setuptools.setup(
     url="",
     packages=setuptools.find_packages(),
     install_requires=[
-        "PyYAML==5.3"
+        "PyYAML==5.3",
+        "paramiko==2.7.1"
     ],
     entry_points = {
         'console_scripts': ['lab=simplelab.lab:main'],
