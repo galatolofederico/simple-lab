@@ -1,4 +1,5 @@
 import paramiko
+from simplelab.api.utils import existsfile
 
 class Server:
     def __init__(self, **kwargs):
@@ -8,9 +9,7 @@ class Server:
         
     def getinstalled(self):
         if not self.connected: return False
-        stdout, stderr = self.cmd("ls ~/simplelab")
-        if len(stderr) > 0: return False
-        return True
+        return existsfile(self, "~/simplelab")
 
     def getrunning(self):
         if not self.connected: return None

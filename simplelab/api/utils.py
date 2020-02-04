@@ -3,8 +3,6 @@ import sys
 import os
 import collections
 
-from simplelab.api.server.sshserver import SSHServer
-from simplelab.api.server.localserver import LocalServer
 
 def loadservers():
     fname = os.path.expanduser("~/.config/lab.servers.yml")
@@ -51,17 +49,6 @@ def parsearguments(servers):
     return Args(server, args[0], args[1:])
 
 
-
-def initservers(servers):
-    ret = [LocalServer()]
-    for server in servers:
-        if server["login_method"] == "ssh_password":
-            ret.append(SSHServer(**server))
-    
-    return ret
-
-
-
 def checkcmd(server, prog):
     print("[%s] checking for: %s" % (server.name, prog))
     _, stderr = server.cmd(prog)
@@ -71,3 +58,9 @@ def checkcmd(server, prog):
 def execcmd(server, cmd):
     print("[%s] executing: %s" % (server.name, cmd))
     _, stderr = server.cmd(cmd)
+
+
+def existsfile(server, file):
+    stdout, stderr = server.cmd("ls "+file)
+    if len(stderr) > 0: return False
+    return True
