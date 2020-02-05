@@ -6,10 +6,8 @@ from simplelab.cmd.install import install
 from simplelab.cmd.update import update
 from simplelab.cmd.remove import remove
 
-
 from simplelab.api.server.sshserver import SSHServer
 from simplelab.api.server.localserver import LocalServer
-
 
 def initservers(servers):
     ret = [LocalServer()]

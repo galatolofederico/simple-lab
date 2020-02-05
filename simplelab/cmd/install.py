@@ -12,8 +12,6 @@ def install(server):
 
     execcmd(server, "git clone https://github.com/galatolofederico/simple-lab.git ~/simplelab")
     execcmd(server, "cd ~/simplelab && virtualenv env")
-    execcmd(server, "cd ~/simplelab && . ./env/bin/activate && python setup.py install")
-    execcmd(server, "mkdir ~/simplelab/repositories")
-    
+    execcmd(server, "cd ~/simplelab && . ./env/bin/activate && python setup.py install")    
 
     print("simplelab installed on %s" % (server.name))

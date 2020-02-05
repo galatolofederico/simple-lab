@@ -45,8 +45,8 @@ def run(server, args):
     if remoterepo.branch != localrepo.branch:
         remoterepo.checkoutbranch(localrepo.branch)
     
+    remoterepo.pull()
     if remoterepo.commit != localrepo.commit:
-        remoterepo.pull()
         remoterepo.checkoutcommit(localrepo.commit)
 
     mods = []
