@@ -48,3 +48,22 @@ def run(server, args):
     if remoterepo.commit != localrepo.commit:
         remoterepo.pull()
         remoterepo.checkoutcommit(localrepo.commit)
+
+    mods = []
+    if "run" in labyml:
+        mods.extend(labyml["run"])
+
+    mods.extend(remoterepo.getshares(labyml))
+    
+    cmd = " ".join(args)
+    for mod in mods:
+        assert len(list(mod.keys())) == 1
+        a = list(mod.keys())[0]
+        v = mod[a]
+        if a == "prepend":
+            cmd = v+" "+cmd
+        if a == "append":
+            cmd = cmd+" "+v
+    
+    #TODO: schedule cmd
+    print(cmd)

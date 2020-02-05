@@ -38,6 +38,8 @@ class Repository:
             print("[%s] Correctly cloned in the remote server" % (self.server.name))
         else:
             raise Exception("There was an error cloning the repository in the remote server %s" % (self.server.name))
+        
+        self.getstatus()
 
 
     def build(self, labyaml):
@@ -46,15 +48,23 @@ class Repository:
                 if not existsfile(self.server, self.path+"/"+asset):
                     for cmd in labyaml["build"][asset]:
                         execcmdpath(self.server, cmd, self.path)
-        
+    
+    def getshares(self, labyaml):
+        mods = []
         if "shares" in labyaml:
             basedir = "~/simplelab/shares/"+self.name
             if not existsfile(self.server, basedir):
                 execcmd(self.server, "mkdir "+basedir)
             if "directories" in labyaml["shares"]:
                 for directory in labyaml["shares"]["directories"]:
-                    if not existsfile(self.server, basedir+"/"+directory):
-                        execcmd(self.server, "mkdir "+basedir+"/"+directory)
+                    shareddir = basedir+"/"+directory
+                    if not existsfile(self.server, shareddir):
+                        execcmd(self.server, "mkdir "+shareddir)
+                    for k, v in labyaml["shares"]["directories"][directory].items():
+                        v = v % (shareddir)
+                        mods.append({k: v})
+        
+        return mods
 
 
 
