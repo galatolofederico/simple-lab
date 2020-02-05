@@ -34,6 +34,15 @@ class Repository:
         else:
             execcmd(self.server, "git clone "+self.remote+" "+self.path)
         
+        if self.exists():
+            print("[%s] Correctly cloned in the remote server" % (self.server.name))
+        else:
+            raise Exception("There was an error cloning the repository in the remote server %s" % (self.server.name))
 
     def build(self, labyaml):
-        pass
+        if "build" in labyaml:
+            for build in labyaml["build"]:
+                for asset in build.keys():
+                    if not existsfile(self.server, self.path+"/"+asset):
+                        for cmd in build[asset]:
+                            execcmd(self.server, "cd %s && %s" % (self.path, cmd))
