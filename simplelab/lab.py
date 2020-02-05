@@ -4,6 +4,8 @@ from simplelab.cmd.run import run
 from simplelab.cmd.status import status
 from simplelab.cmd.install import install
 from simplelab.cmd.update import update
+from simplelab.cmd.remove import remove
+
 
 from simplelab.api.server.sshserver import SSHServer
 from simplelab.api.server.localserver import LocalServer
@@ -30,3 +32,5 @@ def main():
         update(args.server)
     elif args.cmd == "shared":
         shared(args.server, args.args)
+    elif args.cmd == "remove":
+        remove(args.server)

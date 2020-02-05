@@ -32,6 +32,7 @@ action can be:
 * update: Update simplelab on [server]
 * shared list: List all the experiment shared assets
 * shared clear <name>: Clear the content of shared assets <name>
+* remove: Delete the repository on [server]
 """)
     sys.exit(1)
 
@@ -43,7 +44,7 @@ def parsearguments(servers):
     args = sys.argv[1:]
     if shift: args = args[1:]
     Args = collections.namedtuple('Args', ['server', 'cmd', 'args'])
-    if args[0] not in ["run", "status", "install", "shared", "update"]:
+    if args[0] not in ["run", "status", "install", "shared", "update", "remove"]:
         print_help()
     
     return Args(server, args[0], args[1:])
