@@ -60,6 +60,10 @@ def execcmd(server, cmd):
     print("[%s] executing: %s" % (server.name, cmd))
     _, stderr = server.cmd(cmd)
 
+def execcmdpath(server, cmd, path):
+    print("[%s] executing: %s  (path: %s)" % (server.name, cmd, path))
+    _, stderr = server.cmd("cd %s && %s" % (path, cmd))
+
 
 def existsfile(server, file):
     stdout, stderr = server.cmd("ls "+file)

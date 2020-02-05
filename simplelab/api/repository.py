@@ -1,4 +1,4 @@
-from simplelab.api.utils import existsfile, execcmd
+from simplelab.api.utils import existsfile, execcmd, execcmdpath
 
 class Repository:
     def __init__(self, server, remote, path):
@@ -39,10 +39,32 @@ class Repository:
         else:
             raise Exception("There was an error cloning the repository in the remote server %s" % (self.server.name))
 
+
     def build(self, labyaml):
         if "build" in labyaml:
-            for build in labyaml["build"]:
-                for asset in build.keys():
-                    if not existsfile(self.server, self.path+"/"+asset):
-                        for cmd in build[asset]:
-                            execcmd(self.server, "cd %s && %s" % (self.path, cmd))
+            for asset in labyaml["build"]:
+                if not existsfile(self.server, self.path+"/"+asset):
+                    for cmd in labyaml["build"][asset]:
+                        execcmdpath(self.server, cmd, self.path)
+        
+        if "shares" in labyaml:
+            basedir = "~/simplelab/shares/"+self.name
+            if not existsfile(self.server, basedir):
+                execcmd(self.server, "mkdir "+basedir)
+            if "directories" in labyaml["shares"]:
+                for directory in labyaml["shares"]["directories"]:
+                    if not existsfile(self.server, basedir+"/"+directory):
+                        execcmd(self.server, "mkdir "+basedir+"/"+directory)
+
+
+
+    def checkoutbranch(self, branch):
+        execcmdpath(self.server, "git checkout %s || git checkout -b %s" % (branch, branch), self.path)
+        self.getstatus()
+    
+    def checkoutcommit(self, commit):
+        execcmdpath(self.server, "git reset --hard %s" % (commit), self.path)
+        self.getstatus()
+
+    def pull(self):
+        execcmdpath(self.server, "git pull origin %s" % (self.branch), self.path)

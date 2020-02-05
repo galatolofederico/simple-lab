@@ -40,7 +40,11 @@ def run(server, args):
     if not remoterepo.exists():
         remoterepo.clone(secrets)
     
-    #TODO: check and update
-    
     remoterepo.build(labyml)
+
+    if remoterepo.branch != localrepo.branch:
+        remoterepo.checkoutbranch(localrepo.branch)
     
+    if remoterepo.commit != localrepo.commit:
+        remoterepo.pull()
+        remoterepo.checkoutcommit(localrepo.commit)
