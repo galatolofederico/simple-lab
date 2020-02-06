@@ -1,10 +1,15 @@
 import os
-import sys
+import argparse
 import json
 
+parser = argparse.ArgumentParser()
+
+parser.add_argument('--type')
+parser.add_argument('--repo')
+parser.add_argument('--cmd')
+
+args = parser.parse_args()
+
 fifo = open("/tmp/simplelab.fifo", "w")
-fifo.write(json.dumps({
-    "repo": sys.argv[1],
-    "cmd": sys.argv[2]
-}))
+fifo.write(json.dumps(vars(args)))
 fifo.close()
