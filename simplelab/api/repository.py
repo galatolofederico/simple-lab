@@ -12,13 +12,13 @@ class Repository:
         return existsfile(self.server, self.path)
     
     def getstatus(self):
-        name, _= execcmdpath(self.server, "basename $(git rev-parse --show-toplevel)", self.path)        
+        name, _= execcmdpath(self.server, "basename $(git rev-parse --show-toplevel)", self.path, silent=True)        
         self.name = name.rstrip()
 
-        branch, _ = execcmdpath(self.server, "git symbolic-ref --short -q HEAD", self.path)
+        branch, _ = execcmdpath(self.server, "git symbolic-ref --short -q HEAD", self.path, silent=True)
         self.branch = branch.rstrip()
 
-        commit, _ = execcmdpath(self.server, "git rev-parse HEAD", self.path)
+        commit, _ = execcmdpath(self.server, "git rev-parse HEAD", self.path, silent=True)
         self.commit = commit.rstrip()
     
     def clone(self, secrets):
@@ -67,7 +67,6 @@ class Repository:
                         mods.append({k: v})
         
         return mods
-
 
 
     def checkoutbranch(self, branch):

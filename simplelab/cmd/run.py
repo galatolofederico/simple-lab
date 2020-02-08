@@ -18,6 +18,8 @@ def run(server, args):
     server.connect()
     if not server.connected: raise Exception("Not connected")
     if not server.getinstalled(): raise Exception("Not installed")
+    if not server.getready(): raise Exception("Not ready")
+
 
     local = LocalServer()
     local.connect()

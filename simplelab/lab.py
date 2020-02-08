@@ -6,6 +6,8 @@ from simplelab.cmd.install import install
 from simplelab.cmd.update import update
 from simplelab.cmd.remove import remove
 from simplelab.cmd.restart import restart
+from simplelab.cmd.logs import logs
+
 
 from simplelab.api.server.sshserver import SSHServer
 from simplelab.api.server.localserver import LocalServer
@@ -35,3 +37,5 @@ def main():
         remove(args.server)
     elif args.cmd == "restart":
         restart(args.server)
+    elif args.cmd == "logs":
+        logs(args.server, args.args)

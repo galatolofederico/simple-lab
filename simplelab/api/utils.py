@@ -44,7 +44,7 @@ def parsearguments(servers):
     args = sys.argv[1:]
     if shift: args = args[1:]
     Args = collections.namedtuple('Args', ['server', 'cmd', 'args'])
-    if args[0] not in ["run", "status", "install", "shared", "update", "remove", "restart"]:
+    if args[0] not in ["run", "status", "install", "shared", "update", "remove", "restart", "logs"]:
         print_help()
     
     return Args(server, args[0], args[1:])
@@ -72,3 +72,8 @@ def existsfile(server, file):
 def mkdir(server, dir):
     print("[%s] creating directory: %s" % (server.name, dir))
     server.cmd("mkdir %s" % (dir, ))
+
+def listdir(server, dir):
+    stdout, stderr = server.cmd("ls %s" % (dir, ))
+    return stdout.rstrip().split("\n")
+
