@@ -7,17 +7,46 @@ import subprocess
 import queue
 import time
 
-if not os.path.exists("/tmp/simplelab.fifo"):
-    os.mkfifo("/tmp/simplelab.fifo")
+if not os.path.exists("/tmp/simplelab_cmd.fifo"):
+    os.mkfifo("/tmp/simplelab_cmd.fifo")
+if not os.path.exists("/tmp/simplelab_ans.fifo"):
+    os.mkfifo("/tmp/simplelab_ans.fifo")
+
+def ans(s):
+    ans_fifo = open("/tmp/simplelab_ans.fifo", "w")
+    ans_fifo.write(str(s))
+    ans_fifo.close()
+
 
 def scheduler():
     global pool
+    global slots
     while True:
-        fifo = open("/tmp/simplelab.fifo", "r")
+        pool = list(filter(lambda p: p.is_alive(), pool))
+        fifo = open("/tmp/simplelab_cmd.fifo", "r")
         msg = json.loads(fifo.read())
         print("Received: %s" % (msg))
-        #if msg["type"] == "cmd":
-        cmd_queue.put(msg)
+        if msg["type"] == "get":
+            if msg["res"] == "processes":
+                ans(len(pool))
+            if msg["res"] == "queued":
+                ans(cmd_queue.qsize())
+            if msg["res"] == "slots":
+                ans(slots)
+            
+        elif msg["type"] == "set":
+            if msg["res"] == "slots":
+                val = int(msg["val"])
+                if val - len(pool) > 0:
+                    for _ in range(0, val-len(pool)):
+                        p = multiprocessing.Process(target=runner)
+                        p.start()
+                        pool.append(p)
+                elif len(pool) - val > 0:
+                    for _ in range(0, len(pool)-val): cmd_queue.put(dict(type="exit"))
+                slots = val
+        else:
+            cmd_queue.put(msg)
 
         fifo.close()
 
@@ -35,11 +64,12 @@ def runner():
 
 
 cmd_queue = multiprocessing.Queue()
-pool = [multiprocessing.Process(target=runner), multiprocessing.Process(target=runner),]
+pool = [multiprocessing.Process(target=runner)]
+slots = 1
 
 if __name__ == "__main__":
     scheduler_thread = threading.Thread(target=scheduler)
     
-    scheduler_thread.start()
-
     for p in pool: p.start()
+    
+    scheduler_thread.start()
