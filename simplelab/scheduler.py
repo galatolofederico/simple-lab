@@ -6,11 +6,12 @@ import multiprocessing
 import subprocess
 import queue
 import time
+import signal
 
-if not os.path.exists("/tmp/simplelab_cmd.fifo"):
-    os.mkfifo("/tmp/simplelab_cmd.fifo")
-if not os.path.exists("/tmp/simplelab_ans.fifo"):
-    os.mkfifo("/tmp/simplelab_ans.fifo")
+def signals_handler(signum, frame):
+    if os.path.exists("/tmp/simplelab_lock.pid"):
+        os.remove("/tmp/simplelab_lock.pid")
+    sys.exit()
 
 def ans(s):
     ans_fifo = open("/tmp/simplelab_ans.fifo", "w")
@@ -63,13 +64,32 @@ def runner():
             subprocess.run(msg["cmd"], shell=True, stdout=stdout, stderr=stderr)
 
 
-cmd_queue = multiprocessing.Queue()
-pool = [multiprocessing.Process(target=runner)]
-slots = 1
-
 if __name__ == "__main__":
-    scheduler_thread = threading.Thread(target=scheduler)
-    
-    for p in pool: p.start()
-    
-    scheduler_thread.start()
+
+    if os.path.exists("/tmp/simplelab_lock.pid"):
+        print("Already Running")
+        sys.exit()
+    else:
+        pidfile = open("/tmp/simplelab_lock.pid", "w")
+        pidfile.write(str(os.getpid()))
+        pidfile.close()
+
+
+    signal.signal(signal.SIGINT, signals_handler)
+    signal.signal(signal.SIGTERM, signals_handler)
+
+    if not os.path.exists("/tmp/simplelab_cmd.fifo"):
+        os.mkfifo("/tmp/simplelab_cmd.fifo")
+    if not os.path.exists("/tmp/simplelab_ans.fifo"):
+        os.mkfifo("/tmp/simplelab_ans.fifo")
+
+    cmd_queue = multiprocessing.Queue()
+    pool = [multiprocessing.Process(target=runner)]
+    slots = 1
+
+    if __name__ == "__main__":
+        scheduler_thread = threading.Thread(target=scheduler)
+        
+        for p in pool: p.start()
+        
+        scheduler_thread.start()
