@@ -66,12 +66,15 @@ def runner():
         if msg["type"] == "exit":
             break
         if msg["type"] == "cmd":
-            folder = "./logs/%s" % (time.time())
+            folder = "./logs/%s/%s" % (msg["repo"], time.time())
+            if not os.exists("./logs/"+msg["repo"]):
+                os.mkdir("./logs/"+msg["repo"])
             os.mkdir(folder)
             stdout = open(folder+"/stdout.log", "w")
             stderr = open(folder+"/stderr.log", "w")
+            cmd = "cd ~/simplelab/repositories/"+msg["repo"]+" && "+msg["cmd"]
             count_queue.put(1)
-            subprocess.run(msg["cmd"], shell=True, stdout=stdout, stderr=stderr)
+            subprocess.run(cmd, shell=True, stdout=stdout, stderr=stderr)
             count_queue.put(-1)
 
 if __name__ == "__main__":

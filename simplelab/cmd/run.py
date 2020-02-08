@@ -65,4 +65,4 @@ def run(server, args):
         if a == "append":
             cmd = cmd+" "+v
     
-    server.schedule("cd "+remoterepo.path+" && "+cmd)
+    server.schedule(cmd, remoterepo.name)

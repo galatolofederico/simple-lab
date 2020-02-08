@@ -37,9 +37,9 @@ class Server:
         if self.getready(): status = "Ready"
         return status
     
-    def schedule(self, cmd):
+    def schedule(self, cmd, repo):
         if not self.connected: raise Exception("Not connected")
         if not self.getready(): raise Exception("Not ready")
         
-        ans, _ = execcmdpath(self, ". ./env/bin/activate && python -m simplelab.dispatcher --type cmd --cmd '"+cmd+"'", "~/simplelab")
+        ans, _ = execcmdpath(self, ". ./env/bin/activate && python -m simplelab.dispatcher --type cmd --cmd '"+cmd+"' --repo '"+repo+"'", "~/simplelab")
         

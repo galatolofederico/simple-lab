@@ -10,6 +10,7 @@ parser.add_argument('--type')
 parser.add_argument('--cmd')
 parser.add_argument('--res')
 parser.add_argument('--val')
+parser.add_argument('--repo')
 
 
 args = parser.parse_args()    
