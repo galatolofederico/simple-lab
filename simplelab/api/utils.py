@@ -58,14 +58,17 @@ def checkcmd(server, prog):
 
 def execcmd(server, cmd):
     print("[%s] executing: %s" % (server.name, cmd))
-    _, stderr = server.cmd(cmd)
+    return server.cmd(cmd)
 
 def execcmdpath(server, cmd, path):
     print("[%s] executing: %s  (path: %s)" % (server.name, cmd, path))
-    _, stderr = server.cmd("cd %s && %s" % (path, cmd))
-
+    return server.cmd("cd %s && %s" % (path, cmd))
 
 def existsfile(server, file):
     stdout, stderr = server.cmd("ls "+file)
     if len(stderr) > 0: return False
     return True
+
+def mkdir(server, dir):
+    print("[%s] creating directory: %s" % (server.name, dir))
+    server.cmd("mkdir %s" % (dir, ))

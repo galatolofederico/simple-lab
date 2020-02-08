@@ -1,4 +1,4 @@
-from simplelab.api.utils import existsfile, execcmd, execcmdpath
+from simplelab.api.utils import existsfile, execcmd, execcmdpath, mkdir
 
 class Repository:
     def __init__(self, server, remote, path):
@@ -12,11 +12,13 @@ class Repository:
         return existsfile(self.server, self.path)
     
     def getstatus(self):
-        name, _= self.server.cmd("cd "+self.path+" && basename $(git rev-parse --show-toplevel)")
+        name, _= execcmdpath(self.server, "basename $(git rev-parse --show-toplevel)", self.path)        
         self.name = name.rstrip()
-        branch, _ = self.server.cmd("cd "+self.path+" && git symbolic-ref --short -q HEAD")
+
+        branch, _ = execcmdpath(self.server, "git symbolic-ref --short -q HEAD", self.path)
         self.branch = branch.rstrip()
-        commit, _ = self.server.cmd("cd "+self.path+" && git rev-parse HEAD")
+
+        commit, _ = execcmdpath(self.server, "git rev-parse HEAD", self.path)
         self.commit = commit.rstrip()
     
     def clone(self, secrets):
@@ -54,12 +56,12 @@ class Repository:
         if "shares" in labyaml:
             basedir = "~/simplelab/shares/"+self.name
             if not existsfile(self.server, basedir):
-                execcmd(self.server, "mkdir "+basedir)
+                mkdir(self.server, basedir)
             if "directories" in labyaml["shares"]:
                 for directory in labyaml["shares"]["directories"]:
                     shareddir = basedir+"/"+directory
                     if not existsfile(self.server, shareddir):
-                        execcmd(self.server, "mkdir "+shareddir)
+                        mkdir(self.server, shareddir)
                     for k, v in labyaml["shares"]["directories"][directory].items():
                         v = v % (shareddir)
                         mods.append({k: v})

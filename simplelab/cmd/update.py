@@ -1,4 +1,4 @@
-from simplelab.api.utils import checkcmd, execcmd
+from simplelab.api.utils import checkcmd, execcmd, execcmdpath
 
 def update(server):
     server.connect()
@@ -10,9 +10,9 @@ def update(server):
     checkcmd(server, "git")
     checkcmd(server, "virtualenv")
 
-    execcmd(server, "cd ~/simplelab && . ./env/bin/activate && pip uninstall simplelab -y")
-    execcmd(server, "cd ~/simplelab && git pull origin master")
-    execcmd(server, "cd ~/simplelab && . ./env/bin/activate && python setup.py install")
+    execcmdpath(server, ". ./env/bin/activate && pip uninstall simplelab -y", "~/simplelab")
+    execcmdpath(server, "git pull origin master", "~/simplelab")
+    execcmdpath(server, ". ./env/bin/activate && python setup.py install", "~/simplelab")
     
 
     print("simplelab updated on %s" % (server.name))
