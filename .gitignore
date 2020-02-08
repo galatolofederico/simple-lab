@@ -7,8 +7,11 @@ __pycache__/
 
 lab.yml
 
-repositories/
+repositories/*
 !repositories/.gitkeep
 
-shares/
+shares/*
 !shares/.gitkeep
+
+logs/*
+!logs/.gitkeep
