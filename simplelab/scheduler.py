@@ -67,7 +67,7 @@ def runner():
             break
         if msg["type"] == "cmd":
             folder = "./logs/%s/%s" % (msg["repo"], time.time())
-            if not os.exists("./logs/"+msg["repo"]):
+            if not os.path.exists("./logs/"+msg["repo"]):
                 os.mkdir("./logs/"+msg["repo"])
             os.mkdir(folder)
             stdout = open(folder+"/stdout.log", "w")
