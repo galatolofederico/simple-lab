@@ -1,4 +1,5 @@
 from simplelab.api.utils import checkcmd, execcmd, execcmdpath
+from simplelab.cmd.restart import restart
 
 def install(server):
     server.connect()
@@ -13,5 +14,7 @@ def install(server):
     execcmd(server, "git clone https://github.com/galatolofederico/simple-lab.git ~/simplelab")
     execcmdpath(server, "virtualenv env", "~/simplelab")
     execcmdpath(server, ". ./env/bin/activate && python setup.py install", "~/simplelab")    
+
+    restart(server)
 
     print("simplelab installed on %s" % (server.name))

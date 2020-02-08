@@ -1,4 +1,5 @@
 from simplelab.api.utils import checkcmd, execcmd, execcmdpath
+from simplelab.cmd.restart import restart
 
 def update(server):
     server.connect()
@@ -14,5 +15,6 @@ def update(server):
     execcmdpath(server, "git pull origin master", "~/simplelab")
     execcmdpath(server, ". ./env/bin/activate && python setup.py install", "~/simplelab")
     
+    restart(server)
 
     print("simplelab updated on %s" % (server.name))
