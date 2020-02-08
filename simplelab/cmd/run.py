@@ -65,5 +65,4 @@ def run(server, args):
         if a == "append":
             cmd = cmd+" "+v
     
-    #TODO: schedule cmd
-    print(cmd)
+    server.schedule("cd "+remoterepo.path+" && "+cmd)

@@ -11,17 +11,21 @@ class Server:
         if not self.connected: return False
         return existsfile(self, "~/simplelab")
 
-    def getrunning(self):
-        if not self.getready(): return None
+    def getres(self, res):
         if not self.connected: return None
-        ans, _ = execcmdpath(self, ". ./env/bin/activate && python -m simplelab.dispatcher --type get --res running", "~/simplelab")
-        return 0
+        if not self.getready(): return None
+        ans, _ = execcmdpath(self, ". ./env/bin/activate && python -m simplelab.dispatcher --type get --res "+res, "~/simplelab", silent=True)
+        return ans.rstrip()
+
+    def getrunning(self):
+        return self.getres("running")
     
     def getqueued(self):
-        if not self.connected: return None
-        if not self.getready(): return None
-        ans, _ = execcmdpath(self, ". ./env/bin/activate && python -m simplelab.dispatcher --type get --res queued", "~/simplelab")
+        return self.getres("queued")
     
+    def getslots(self):
+        return self.getres("slots")
+
     def getready(self):
         if not self.connected: return None
         return existsfile(self, "/tmp/simplelab_lock.pid")
@@ -32,3 +36,10 @@ class Server:
         if self.getinstalled(): status = "Installed"
         if self.getready(): status = "Ready"
         return status
+    
+    def schedule(self, cmd):
+        if not self.connected: raise Exception("Not connected")
+        if not self.getready(): raise Exception("Not ready")
+        
+        ans, _ = execcmdpath(self, ". ./env/bin/activate && python -m simplelab.dispatcher --type cmd --cmd '"+cmd+"'", "~/simplelab")
+        

@@ -56,13 +56,12 @@ def checkcmd(server, prog):
     if len(stderr) > 0:
         raise Exception("You need to install %s on %s" % (prog, server.name))
 
-def execcmd(server, cmd):
-    print("[%s] executing: %s" % (server.name, cmd))
+def execcmd(server, cmd, silent=False):
+    if not silent: print("[%s] executing: %s" % (server.name, cmd))
     return server.cmd(cmd)
 
-def execcmdpath(server, cmd, path):
-    print("[%s] executing: %s  (path: %s)" % (server.name, cmd, path))
-    print("cd %s && %s" % (path, cmd))
+def execcmdpath(server, cmd, path, silent=False):
+    if not silent: print("[%s] executing: %s  (path: %s)" % (server.name, cmd, path))
     return server.cmd("cd %s && %s" % (path, cmd))
 
 def existsfile(server, file):
