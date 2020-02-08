@@ -26,3 +26,9 @@ class SSHServer(Server):
         if not self.connected: raise Exception("Not connected")
         stdin, stdout, stderr = self.client.exec_command(cmd)
         return stdout.read().decode("utf-8"), stderr.read().decode("utf-8")
+
+
+    def cmd_timeout(self, cmd, timeout):
+        if not self.connected: raise Exception("Not connected")
+        stdin, stdout, stderr = self.client.exec_command(cmd, timeout=timeout)
+        return stdout.read().decode("utf-8"), stderr.read().decode("utf-8")

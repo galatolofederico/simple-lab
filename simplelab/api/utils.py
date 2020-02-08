@@ -3,7 +3,6 @@ import sys
 import os
 import collections
 
-
 def loadservers():
     fname = os.path.expanduser("~/.config/lab.servers.yml")
     if os.path.isfile(fname):
@@ -29,6 +28,7 @@ action can be:
 * run <cmd>: Start experiment on [server] with command <cmd>
 * status: Check the status of all the servers
 * install: Install simplelab on [server]
+* restart: Restart simplelab scheduler on [server]
 * update: Update simplelab on [server]
 * shared list: List all the experiment shared assets
 * shared clear <name>: Clear the content of shared assets <name>
@@ -44,7 +44,7 @@ def parsearguments(servers):
     args = sys.argv[1:]
     if shift: args = args[1:]
     Args = collections.namedtuple('Args', ['server', 'cmd', 'args'])
-    if args[0] not in ["run", "status", "install", "shared", "update", "remove"]:
+    if args[0] not in ["run", "status", "install", "shared", "update", "remove", "restart"]:
         print_help()
     
     return Args(server, args[0], args[1:])
@@ -62,6 +62,7 @@ def execcmd(server, cmd):
 
 def execcmdpath(server, cmd, path):
     print("[%s] executing: %s  (path: %s)" % (server.name, cmd, path))
+    print("cd %s && %s" % (path, cmd))
     return server.cmd("cd %s && %s" % (path, cmd))
 
 def existsfile(server, file):

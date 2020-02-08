@@ -18,3 +18,6 @@ class LocalServer(Server):
         stdout, stderr = proc.communicate()
         
         return stdout.decode("utf-8"), stderr.decode("utf-8")
+    
+    def cmd_timeout(self, cmd, timeout):
+        raise NotImplementedError()

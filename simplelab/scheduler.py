@@ -22,6 +22,7 @@ def ans(s):
 def scheduler():
     global pool
     global slots
+    global running
     while True:
         pool = list(filter(lambda p: p.is_alive(), pool))
         fifo = open("/tmp/simplelab_cmd.fifo", "r")
@@ -30,10 +31,12 @@ def scheduler():
         if msg["type"] == "get":
             if msg["res"] == "processes":
                 ans(len(pool))
-            if msg["res"] == "queued":
+            elif msg["res"] == "queued":
                 ans(cmd_queue.qsize())
-            if msg["res"] == "slots":
+            elif msg["res"] == "slots":
                 ans(slots)
+            elif msg["res"] == "running":
+                ans(running)
             
         elif msg["type"] == "set":
             if msg["res"] == "slots":
@@ -51,6 +54,12 @@ def scheduler():
 
         fifo.close()
 
+
+def counter():
+    global running
+    while True:
+        running += count_queue.get()
+
 def runner():
     while True:
         msg = cmd_queue.get()
@@ -61,8 +70,9 @@ def runner():
             os.mkdir(folder)
             stdout = open(folder+"/stdout.log", "w")
             stderr = open(folder+"/stderr.log", "w")
+            count_queue.put(1)
             subprocess.run(msg["cmd"], shell=True, stdout=stdout, stderr=stderr)
-
+            count_queue.put(-1)
 
 if __name__ == "__main__":
 
@@ -84,12 +94,17 @@ if __name__ == "__main__":
         os.mkfifo("/tmp/simplelab_ans.fifo")
 
     cmd_queue = multiprocessing.Queue()
+    count_queue = multiprocessing.Queue()
+
     pool = [multiprocessing.Process(target=runner)]
     slots = 1
+    running = 0
 
     if __name__ == "__main__":
         scheduler_thread = threading.Thread(target=scheduler)
+        counter_thread = threading.Thread(target=counter)
         
         for p in pool: p.start()
         
         scheduler_thread.start()
+        counter_thread.start()
