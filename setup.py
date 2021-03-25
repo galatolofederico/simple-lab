@@ -14,7 +14,7 @@ setuptools.setup(
     url="",
     packages=setuptools.find_packages(),
     install_requires=[
-        "PyYAML==5.3",
+        "PyYAML==5.4",
         "paramiko==2.7.1",
         "prettytable==0.7.2"
     ],
